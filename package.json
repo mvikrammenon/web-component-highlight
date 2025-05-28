@@ -1,0 +1,22 @@
+{
+  "name": "ui-component-highlighter",
+  "version": "1.0.0",
+  "description": "Chrome extension for highlighting UI components with documentation links",
+  "scripts": {
+    "build": "tsc && npm run copy-files",
+    "watch": "tsc -w",
+    "lint": "eslint src/**/*.ts",
+    "test": "jest",
+    "copy-files": "cp src/manifest.json dist/ && cp src/public/icon.png dist/ && cp src/public/styles.css dist/"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.260",
+    "@types/jest": "^29.5.11",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3"
+  }
+}
