@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Page for Component Highlighter</title>
+  <style>
+    div[data-test-id] {
+      width: 200px;
+      height: 100px;
+      margin: 20px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+    }
+    .spacer { height: 500px; } /* For testing scroll */
+  </style>
+</head>
+<body>
+  <div data-test-id="banner-dtid">Banner Component</div>
+  <div data-test-id="hero-dtid">Hero Component</div>
+  <div data-test-id="cards-container-dtid">Cards Container</div>
+  <div data-test-id="cards-dtid">Cards Component</div>
+  <div data-test-id="tiles-dtid">3 Col Tiles</div>
+  <div data-test-id="promo-dtid">Promo Component</div>
+  <div data-test-id="non-configured-id">Non-Configured ID</div>
+  <div class="spacer"></div>
+</body>
+</html>

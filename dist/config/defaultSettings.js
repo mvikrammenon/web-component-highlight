@@ -8,8 +8,7 @@ export const defaultSettings = {
             contentTypeUrl: 'https://docs.example.com/FooterComponent',
             uxDocsUrl: 'https://zeroheight.com/',
             identifiers: {
-                className: 'sitesBanner',
-                id: '730VWGE2yHuzuKqADigbb3'
+                dataTestId: 'banner-dtid'
             },
             borderHighlightStyle: '1px dotted red'
         },
@@ -18,7 +17,7 @@ export const defaultSettings = {
             contentTypeUrl: 'https://docs.example.com/HeroComponent',
             uxDocsUrl: 'https://zeroheight.com/',
             identifiers: {
-                className: 'heroComponent'
+                dataTestId: 'hero-dtid'
             },
             borderHighlightStyle: '1px solid red'
         },
@@ -27,7 +26,7 @@ export const defaultSettings = {
             contentTypeUrl: 'https://docs.example.com/HeroComponent',
             uxDocsUrl: 'https://zeroheight.com/',
             identifiers: {
-                className: 'sitesCardsContainer'
+                dataTestId: 'cards-container-dtid'
             },
             borderHighlightStyle: '1px dotted green'
         },
@@ -36,7 +35,7 @@ export const defaultSettings = {
             contentTypeUrl: 'https://docs.example.com/HeroComponent',
             uxDocsUrl: 'https://zeroheight.com/',
             identifiers: {
-                className: 'siemens-cards'
+                dataTestId: 'cards-dtid'
             },
             borderHighlightStyle: '1px dotted blue'
         },
@@ -45,7 +44,7 @@ export const defaultSettings = {
             contentTypeUrl: 'https://docs.example.com/HeroComponent',
             uxDocsUrl: 'https://zeroheight.com/',
             identifiers: {
-                className: 'sitesThreeColTiles'
+                dataTestId: 'tiles-dtid'
             },
             borderHighlightStyle: '1px dotted blue'
         },
@@ -54,7 +53,7 @@ export const defaultSettings = {
             contentTypeUrl: 'https://docs.example.com/HeroComponent',
             uxDocsUrl: 'https://zeroheight.com/',
             identifiers: {
-                className: 'promo-section'
+                dataTestId: 'promo-dtid'
             },
             borderHighlightStyle: '1px dotted blue'
         }

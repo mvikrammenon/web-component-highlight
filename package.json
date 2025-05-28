@@ -7,7 +7,7 @@
     "watch": "tsc -w",
     "lint": "eslint src/**/*.ts",
     "test": "jest",
-    "copy-files": "cp src/manifest.json dist/ && cp src/public/icon.png dist/ && cp src/public/styles.css dist/"
+    "copy-files": "cp src/manifest.json dist/ && cp src/public/icon.png dist/ && cp src/styles/styles.css dist/"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.260",

@@ -1,6 +1,7 @@
 export interface ComponentIdentifiers {
-  className: string;
+  className?: string;
   id?: string;
+  dataTestId?: string;
 }
 
 export interface ComponentConfig {

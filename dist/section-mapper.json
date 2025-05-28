@@ -5,8 +5,7 @@
       "contentTypeUrl": "https://docs.example.com/FooterComponent",
       "uxDocsUrl": "",
       "identifiers": {
-        "className": "sitesBanner",
-        "id": "730VWGE2yHuzuKqADigbb3"
+        "dataTestId": "banner-dtid"
       },
       "borderHighlightStyle": "1px dotted red"
     },
@@ -15,7 +14,7 @@
       "contentTypeUrl": "https://docs.example.com/HeroComponent",
       "uxDocsUrl": "",
       "identifiers": {
-        "className": "heroComponent"
+        "dataTestId": "hero-dtid"
       },
       "borderHighlightStyle": "1px solid red"
     },
@@ -24,7 +23,7 @@
       "contentTypeUrl": "https://docs.example.com/HeroComponent",
       "uxDocsUrl": "",
       "identifiers": {
-        "className": "sitesCardsContainer"
+        "dataTestId": "cards-container-dtid"
       },
       "borderHighlightStyle": "1px dotted green"
     },
@@ -33,7 +32,7 @@
       "contentTypeUrl": "https://docs.example.com/HeroComponent",
       "uxDocsUrl": "",
       "identifiers": {
-        "className": "siemens-cards"
+        "dataTestId": "cards-dtid"
       },
       "borderHighlightStyle": "1px dotted blue"
      },
@@ -42,7 +41,7 @@
       "contentTypeUrl": "https://docs.example.com/HeroComponent",
       "uxDocsUrl": "",
       "identifiers": {
-        "className": "sitesThreeColTiles"
+        "dataTestId": "tiles-dtid"
       },
       "borderHighlightStyle": "1px dotted blue"
     },
@@ -51,7 +50,7 @@
       "contentTypeUrl": "https://docs.example.com/HeroComponent",
       "uxDocsUrl": "",
       "identifiers": {
-        "className": "promo-section"
+        "dataTestId": "promo-dtid"
       },
       "borderHighlightStyle": "1px dotted blue"
     } 
