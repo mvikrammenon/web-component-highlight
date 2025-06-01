@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Highlighter Testbed</title>
+  <link rel="stylesheet" href="../styles/styles.css"> <!-- Optional: if you want to use existing styles -->
+  <style>
+    body { font-family: sans-serif; padding: 10px; }
+    #mock-page-content { border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
+    .mock-component { box-sizing: border-box; } /* Ensure border doesn't add to size for highlighter */
+  </style>
+</head>
+<body>
+  <h1>UI Highlighter Testbed</h1>
+  <div id="controls">
+    <button id="toggleButton">Show Highlights</button>
+  </div>
+  <div id="mock-page-content">
+    <div id="component1" class="mock-component" style="width: 200px; height: 100px; background-color: lightblue; margin: 20px; border: 1px solid blue;">Component 1 (ID)</div>
+    <div class="component2 mock-component" style="width: 150px; height: 150px; background-color: lightgreen; margin: 20px; border: 1px solid green;">Component 2 (Class)</div>
+    <div style="height: 1000px;"></div> <!-- Spacer for scrolling -->
+  </div>
+  <!-- highlight-container is not strictly needed if highlighter appends to body -->
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

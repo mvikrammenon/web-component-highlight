@@ -7,16 +7,19 @@
     "watch": "tsc -w",
     "lint": "eslint src/**/*.ts",
     "test": "jest",
-    "copy-files": "cp src/manifest.json dist/ && cp src/public/icon.png dist/ && cp src/public/styles.css dist/"
+    "copy-files": "cp src/manifest.json dist/ && cp src/public/icon.png dist/ && cp src/public/styles.css dist/",
+    "serve:ui": "npx vite --config vite.config.ts"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.260",
     "@types/jest": "^29.5.11",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
+    "@vitejs/plugin-basic-ssl": "^2.0.0",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^6.3.5"
   }
 }
