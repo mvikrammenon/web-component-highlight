@@ -41,26 +41,121 @@ const ComponentHighlighter = {
   createHighlightElement(component) {
     const highlightEl = document.createElement('div');
     highlightEl.style.position = 'absolute';
-    highlightEl.style.border = component.borderHighlightStyle;
-    highlightEl.style.pointerEvents = 'none';
+    highlightEl.style.backgroundColor = '#007acc';
+    highlightEl.style.color = 'white';
+    highlightEl.style.padding = '4px 8px';
+    highlightEl.style.borderRadius = '4px';
+    highlightEl.style.fontSize = '12px';
+    highlightEl.style.fontFamily = 'Arial, sans-serif';
+    highlightEl.style.fontWeight = 'bold';
+    highlightEl.style.cursor = 'pointer';
     highlightEl.style.zIndex = '10000';
+    highlightEl.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+    highlightEl.style.transition = 'all 0.2s ease';
+    highlightEl.textContent = component.name;
     highlightEl.setAttribute('data-component-name', component.name);
-    highlightEl.setAttribute('title', `${component.name}\nContent Type: ${component.contentTypeUrl}\nUX Docs: ${component.uxDocsUrl}`);
+    
+    // Create custom tooltip
+    const tooltip = document.createElement('div');
+    tooltip.style.position = 'absolute';
+    tooltip.style.backgroundColor = '#333';
+    tooltip.style.color = 'white';
+    tooltip.style.padding = '8px 12px';
+    tooltip.style.borderRadius = '6px';
+    tooltip.style.fontSize = '11px';
+    tooltip.style.fontFamily = 'Arial, sans-serif';
+    tooltip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
+    tooltip.style.zIndex = '10001';
+    tooltip.style.display = 'none';
+    tooltip.style.minWidth = '200px';
+    tooltip.style.maxWidth = '300px';
+    tooltip.style.lineHeight = '1.4';
+    
+    // Create tooltip content with proper links
+    tooltip.innerHTML = `
+      <div style="margin-bottom: 6px; font-weight: bold;">${component.name}</div>
+      ${component.contentTypeUrl ? `<div style="margin-bottom: 4px;"><strong>Content Type:</strong> <a href="${component.contentTypeUrl}" target="_blank" style="color: #4da6ff; text-decoration: none;">View Docs</a></div>` : ''}
+      ${component.uxDocsUrl ? `<div><strong>UX Docs:</strong> <a href="${component.uxDocsUrl}" target="_blank" style="color: #4da6ff; text-decoration: none;">View Storybook</a></div>` : ''}
+    `;
+    
+    document.body.appendChild(tooltip);
+    
+    // Add hover effects and tooltip functionality
+     let hideTimeout;
+     
+     const showTooltip = () => {
+       clearTimeout(hideTimeout);
+       highlightEl.style.backgroundColor = '#005a9e';
+       highlightEl.style.transform = 'scale(1.05)';
+       
+       // Position and show tooltip
+       const rect = highlightEl.getBoundingClientRect();
+       tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+       tooltip.style.left = `${rect.left + window.scrollX}px`;
+       
+       // Adjust tooltip position if it goes off-screen
+       setTimeout(() => {
+         const tooltipRect = tooltip.getBoundingClientRect();
+         if (tooltipRect.right > window.innerWidth) {
+           tooltip.style.left = `${window.innerWidth - tooltipRect.width - 10 + window.scrollX}px`;
+         }
+         if (tooltipRect.bottom > window.innerHeight) {
+           tooltip.style.top = `${rect.top + window.scrollY - tooltipRect.height - 5}px`;
+         }
+       }, 0);
+       
+       tooltip.style.display = 'block';
+     };
+     
+     const hideTooltip = () => {
+       highlightEl.style.backgroundColor = '#007acc';
+       highlightEl.style.transform = 'scale(1)';
+       hideTimeout = setTimeout(() => {
+         tooltip.style.display = 'none';
+       }, 300); // 300ms delay before hiding
+     };
+     
+     highlightEl.addEventListener('mouseenter', showTooltip);
+     highlightEl.addEventListener('mouseleave', hideTooltip);
+     
+     // Keep tooltip visible when hovering over it
+     tooltip.addEventListener('mouseenter', () => {
+       clearTimeout(hideTimeout);
+     });
+     
+     tooltip.addEventListener('mouseleave', () => {
+       hideTimeout = setTimeout(() => {
+         tooltip.style.display = 'none';
+       }, 300); // 300ms delay before hiding
+     });
+    
+    // Store tooltip reference for cleanup
+    highlightEl._tooltip = tooltip;
+    
     return highlightEl;
   },
 
   positionHighlight(highlightEl, targetEl) {
     const rect = targetEl.getBoundingClientRect();
-    highlightEl.style.top = `${rect.top + window.scrollY}px`;
-    highlightEl.style.left = `${rect.left + window.scrollX}px`;
-    highlightEl.style.width = `${rect.width}px`;
-    highlightEl.style.height = `${rect.height}px`;
+    // Position the tag in the top right corner of the component
+    highlightEl.style.top = `${rect.top + window.scrollY - 2}px`;
+    highlightEl.style.left = `${rect.right + window.scrollX - highlightEl.offsetWidth - 2}px`;
+    
+    // Ensure the tag doesn't go off-screen
+    const tagRect = highlightEl.getBoundingClientRect();
+    if (tagRect.right > window.innerWidth) {
+      highlightEl.style.left = `${rect.left + window.scrollX + 2}px`;
+    }
+    if (tagRect.top < 0) {
+      highlightEl.style.top = `${rect.top + window.scrollY + 2}px`;
+    }
   },
 
   highlightComponent(element, component) {
     const highlightEl = this.createHighlightElement(component);
-    this.positionHighlight(highlightEl, element);
+    // Append to DOM first so we can get dimensions
     document.body.appendChild(highlightEl);
+    this.positionHighlight(highlightEl, element);
 
     highlightEl.addEventListener('click', () => {
       window.open(component.contentTypeUrl, '_blank');
@@ -69,7 +164,13 @@ const ComponentHighlighter = {
 
   removeHighlight() {
     const highlightElements = document.querySelectorAll(`[data-component-name]`);
-    highlightElements.forEach(el => el.remove());
+    highlightElements.forEach(el => {
+      // Clean up associated tooltip
+      if (el._tooltip) {
+        el._tooltip.remove();
+      }
+      el.remove();
+    });
   },
 
   toggleHighlights(settings) {
