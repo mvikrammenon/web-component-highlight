@@ -1,6 +1,4 @@
-import { ExtensionSettings } from '../types';
-
-export const defaultSettings: ExtensionSettings = {
+const defaultSettings = {
   isHighlightEnabled: false,
   storageKeyName: 'component-highlight-settings',
   elHighlightName: 'data-component-highlight',

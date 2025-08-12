@@ -1,5 +1,3 @@
-import { HighlightMessage } from './types';
-
 chrome.action.onClicked.addListener((tab) => {
   if (!tab.id) return;
 
@@ -12,13 +10,13 @@ chrome.action.onClicked.addListener((tab) => {
   // Inject the content script into the current tab
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    files: ['contentScript.js']
+    files: ['js/contentScript.js']
   })
   .then(() => {
     // Send a message to toggle highlights
-    chrome.tabs.sendMessage(tab.id!, { 
+    chrome.tabs.sendMessage(tab.id, {
       action: 'toggleHighlight' 
-    } as HighlightMessage);
+    });
   })
   .catch((error) => {
     console.error(`Script injection failed: ${error.message}`);
