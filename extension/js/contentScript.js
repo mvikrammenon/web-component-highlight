@@ -1,44 +1,52 @@
-const StorageManager = {
-  async saveToStorage(key, value) {
-    return new Promise((resolve) => {
-      chrome.storage.local.set({ [key]: value }, () => {
-        resolve();
-      });
-    });
-  },
-
-  async getFromStorage(key) {
-    return new Promise((resolve) => {
-      chrome.storage.local.get(key, (result) => {
-        resolve(result[key] || null);
-      });
-    });
-  },
-
-  async initializeSettings() {
-    const storedSettings = await this.getFromStorage(defaultSettings.storageKeyName);
-
-    if (storedSettings) {
-      // A simple merge, stored settings take precedence
-      const mergedSettings = { ...defaultSettings, ...storedSettings };
-      // Ensure componentsConfig is merged correctly if it exists in both
-      if (storedSettings.componentsConfig) {
-        mergedSettings.componentsConfig = [
-          ...defaultSettings.componentsConfig,
-          ...storedSettings.componentsConfig
-        ];
-      }
-      await this.saveToStorage(defaultSettings.storageKeyName, mergedSettings);
-      return mergedSettings;
-    }
-
-    await this.saveToStorage(defaultSettings.storageKeyName, defaultSettings);
-    return defaultSettings;
+// Prevent multiple script injections
+(function() {
+  if (window.componentHighlighterLoaded) {
+    return;
   }
-};
+  window.componentHighlighterLoaded = true;
 
-const ComponentHighlighter = {
+  const StorageManager = {
+    async saveToStorage(key, value) {
+      return new Promise((resolve) => {
+        chrome.storage.local.set({ [key]: value }, () => {
+          resolve();
+        });
+      });
+    },
+
+    async getFromStorage(key) {
+      return new Promise((resolve) => {
+        chrome.storage.local.get(key, (result) => {
+          resolve(result[key] || null);
+        });
+      });
+    },
+
+    async initializeSettings() {
+      const storedSettings = await this.getFromStorage(defaultSettings.storageKeyName);
+
+      if (storedSettings) {
+        // A simple merge, stored settings take precedence
+        const mergedSettings = { ...defaultSettings, ...storedSettings };
+        // Ensure componentsConfig is merged correctly if it exists in both
+        if (storedSettings.componentsConfig) {
+          mergedSettings.componentsConfig = [
+            ...defaultSettings.componentsConfig,
+            ...storedSettings.componentsConfig
+          ];
+        }
+        await this.saveToStorage(defaultSettings.storageKeyName, mergedSettings);
+        return mergedSettings;
+      }
+
+      await this.saveToStorage(defaultSettings.storageKeyName, defaultSettings);
+      return defaultSettings;
+    }
+  };
+
+  const ComponentHighlighter = {
   createHighlightElement(component) {
+    const uniqueId = Math.random().toString(36).substring(4, 10);
     const highlightEl = document.createElement('div');
     highlightEl.style.position = 'absolute';
     highlightEl.style.backgroundColor = '#007acc';
@@ -53,7 +61,7 @@ const ComponentHighlighter = {
     highlightEl.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
     highlightEl.style.transition = 'all 0.2s ease';
     highlightEl.textContent = component.name;
-    highlightEl.setAttribute('data-component-name', component.name);
+    highlightEl.setAttribute('data-component-name', `${component.name}_${uniqueId}`);
     
     // Create custom tooltip
     const tooltip = document.createElement('div');
@@ -199,7 +207,7 @@ const ComponentHighlighter = {
   }
 };
 
-class ContentScript {
+  class ContentScript {
   constructor() {
     this.settings = null;
     this.initialize();
@@ -243,4 +251,5 @@ class ContentScript {
   }
 }
 
-new ContentScript();
+  new ContentScript();
+})();
