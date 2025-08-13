@@ -50,12 +50,65 @@
             ...storedSettings.componentsConfig
           ];
         }
+        // Ensure domains are properly merged
+        if (storedSettings.domains) {
+          mergedSettings.domains = { ...defaultSettings.domains, ...storedSettings.domains };
+        }
         await this.saveToStorage(defaultSettings.storageKeyName, mergedSettings);
         return mergedSettings;
       }
 
       await this.saveToStorage(defaultSettings.storageKeyName, defaultSettings);
       return defaultSettings;
+    },
+
+    /**
+     * Updates domain configuration in settings
+     * @param {Object} domains - Domain configuration object
+     * @param {string} domains.contentfulDomain - Contentful base URL
+     * @param {string} domains.storybookDomain - Storybook base URL
+     * @param {boolean} domains.setupCompleted - Whether setup is completed
+     * @returns {Promise<void>}
+     */
+    async updateDomains(domains) {
+      const currentSettings = await this.getFromStorage(defaultSettings.storageKeyName) || defaultSettings;
+      currentSettings.domains = { ...currentSettings.domains, ...domains };
+      await this.saveToStorage(defaultSettings.storageKeyName, currentSettings);
+    }
+  };
+
+  /**
+   * Utility functions for URL processing
+   */
+  const UrlUtils = {
+    /**
+     * Replaces placeholder tokens in URLs with actual domain values
+     * @param {string} url - URL with placeholder tokens
+     * @param {Object} domains - Domain configuration
+     * @param {string} domains.contentfulDomain - Contentful base URL
+     * @param {string} domains.storybookDomain - Storybook base URL
+     * @returns {string} URL with placeholders replaced
+     */
+    replacePlaceholders(url, domains) {
+      if (!url || !domains) return url;
+      
+      return url
+        .replace('{CONTENTFUL_DOMAIN}', domains.contentfulDomain || '')
+        .replace('{STORYBOOK_DOMAIN}', domains.storybookDomain || '');
+    },
+
+    /**
+     * Processes component configuration to replace URL placeholders
+     * @param {Object} component - Component configuration
+     * @param {Object} domains - Domain configuration
+     * @returns {Object} Component with processed URLs
+     */
+    processComponentUrls(component, domains) {
+      return {
+        ...component,
+        contentTypeUrl: this.replacePlaceholders(component.contentTypeUrl, domains),
+        uxDocsUrl: this.replacePlaceholders(component.uxDocsUrl, domains)
+      };
     }
   };
 
@@ -206,33 +259,43 @@
   },
 
   /**
-   * Toggles component highlights based on current settings
-   * @param {Object} settings - Extension settings object
-   * @param {boolean} settings.isHighlightEnabled - Whether highlighting is enabled
-   * @param {Array} settings.componentsConfig - Array of component configurations
-   */
-  toggleHighlights(settings) {
-    this.removeHighlight(); // Clear previous highlights
-    if (!settings.isHighlightEnabled) {
-      return;
-    }
+    * Toggles component highlights based on current settings
+    * @param {Object} settings - Extension settings object
+    * @param {boolean} settings.isHighlightEnabled - Whether highlighting is enabled
+    * @param {Array} settings.componentsConfig - Array of component configurations
+    * @param {Object} settings.domains - Domain configuration for URL processing
+    */
+   toggleHighlights(settings) {
+     this.removeHighlight(); // Clear previous highlights
+     if (!settings.isHighlightEnabled) {
+       return;
+     }
 
-    settings.componentsConfig.forEach(component => {
-      const selector = component.identifiers.id
-        ? `#${component.identifiers.id}`
-        : `.${component.identifiers.className}`;
+     settings.componentsConfig.forEach(component => {
+       let selector;
+       if (component.identifiers.id) {
+         selector = `#${component.identifiers.id}`;
+       } else if (component.identifiers.classNames) {
+         // Support multiple class names
+         selector = component.identifiers.classNames.map(className => `.${className}`).join(', ');
+       } else {
+         // Backward compatibility with single className
+         selector = `.${component.identifiers.className}`;
+       }
 
-      // Only select elements that haven't been highlighted yet
-      const elements = document.querySelectorAll(`${selector}:not([data-component-highlighted])`);
-      
-      // Group elements by proximity to avoid overlapping highlights
-      const representativeElements = this.getRepresentativeElements(elements);
-      
-      representativeElements.forEach(el => {
-        this.highlightComponent(el, component);
-      });
-    });
-  },
+       // Only select elements that haven't been highlighted yet
+       const elements = document.querySelectorAll(`${selector}:not([data-component-highlighted])`);
+       
+       // Group elements by proximity to avoid overlapping highlights
+       const representativeElements = this.getRepresentativeElements(elements);
+       
+       representativeElements.forEach(el => {
+         // Process component URLs with domain placeholders
+         const processedComponent = UrlUtils.processComponentUrls(component, settings.domains);
+         this.highlightComponent(el, processedComponent);
+       });
+     });
+   },
 
   /**
    * Filters elements to prevent overlapping highlights by selecting representative elements
@@ -322,29 +385,33 @@
   },
   
   /**
-   * Highlights newly added DOM elements that match component selectors
-   * @param {Object} settings - Extension settings object
-   */
-  highlightNewElements(settings) {
-    settings.componentsConfig.forEach(component => {
-      const selector = component.identifiers.id
-        ? `#${component.identifiers.id}`
-        : `.${component.identifiers.className}`;
+    * Highlights newly added DOM elements that match component selectors
+    * @param {Object} settings - Extension settings object
+    */
+   highlightNewElements(settings) {
+     settings.componentsConfig.forEach(component => {
+       const selector = component.identifiers.id
+         ? `#${component.identifiers.id}`
+         : `.${component.identifiers.className}`;
 
-      // Only select elements that haven't been highlighted yet
-      const elements = document.querySelectorAll(`${selector}:not([data-component-highlighted])`);
-      
-      if (elements.length > 0) {
-        // Group elements by proximity to avoid overlapping highlights
-        const representativeElements = this.getRepresentativeElements(elements);
-        
-        representativeElements.forEach(el => {
-          this.highlightComponent(el, component);
-        });
-      }
-    });
-  }
+       // Only select elements that haven't been highlighted yet
+       const elements = document.querySelectorAll(`${selector}:not([data-component-highlighted])`);
+       
+       if (elements.length > 0) {
+         // Group elements by proximity to avoid overlapping highlights
+         const representativeElements = this.getRepresentativeElements(elements);
+         
+         representativeElements.forEach(el => {
+           // Process component URLs with domain placeholders
+           const processedComponent = UrlUtils.processComponentUrls(component, settings.domains);
+           this.highlightComponent(el, processedComponent);
+         });
+       }
+     });
+   }
 };
+
+  // SetupManager removed - now using extension popup instead
 
   /**
    * Main content script class that manages the extension lifecycle
@@ -365,6 +432,10 @@
     async initialize() {
       try {
         this.settings = await StorageManager.initializeSettings();
+        
+        // Apply initial highlights if enabled
+        ComponentHighlighter.toggleHighlights(this.settings);
+        
         chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
         window.addEventListener('scroll', () => this.handleScroll(), true); // Use capturing to get scroll events
         window.addEventListener('resize', () => this.handleResize());
@@ -374,23 +445,32 @@
       }
     }
 
+
+
     /**
-     * Handles messages from the background script
-     * @param {Object} message - Message object from background script
-     * @param {string} message.action - Action to perform
-     */
-    handleMessage(message) {
-      if (message.action === 'toggleHighlight') {
-        this.settings.isHighlightEnabled = !this.settings.isHighlightEnabled;
-        StorageManager.saveToStorage(this.settings.storageKeyName, this.settings)
-          .then(() => {
-            ComponentHighlighter.toggleHighlights(this.settings);
-          })
-          .catch((error) => {
-            console.error('Failed to save settings:', error);
-          });
-      }
-    }
+      * Handles messages from the background script and popup
+      * @param {Object} message - Message object from background script or popup
+      * @param {string} message.type - Message type to handle
+      */
+     async handleMessage(message) {
+       if (message.type === 'TOGGLE_HIGHLIGHTS') {
+         this.settings.isHighlightEnabled = !this.settings.isHighlightEnabled;
+         try {
+           await StorageManager.saveToStorage(this.settings.storageKeyName, this.settings);
+           ComponentHighlighter.toggleHighlights(this.settings);
+         } catch (error) {
+           console.error('Failed to save settings:', error);
+         }
+       } else if (message.type === 'DOMAINS_UPDATED') {
+         // Reload settings from storage and apply highlights
+         try {
+           this.settings = await StorageManager.initializeSettings();
+           ComponentHighlighter.toggleHighlights(this.settings);
+         } catch (error) {
+           console.error('Failed to update settings:', error);
+         }
+       }
+     }
 
     /**
      * Handles scroll events by updating highlight positions

@@ -1,31 +1,24 @@
 /**
- * Handles extension icon clicks by injecting content script and toggling highlights
- * Validates the tab URL to prevent injection into restricted chrome:// pages
- * @param {chrome.tabs.Tab} tab - The active tab object containing tab information
- * @param {number} tab.id - The unique identifier for the tab
- * @param {string} tab.url - The URL of the current tab
+ * Background script for Component Highlighter extension
+ * The extension now uses a popup interface instead of direct icon clicks
+ * Content scripts are automatically injected via manifest.json
  */
-chrome.action.onClicked.addListener((tab) => {
-  if (!tab.id) return;
 
-  // Check if the URL is a chrome:// URL
-  if (tab.url && tab.url.startsWith('chrome://')) {
-    console.error('Cannot inject content script into chrome:// URLs');
-    return;
-  }
-
-  // Inject the content script into the current tab
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    files: ['js/contentScript.js']
-  })
-  .then(() => {
-    // Send a message to toggle highlights
-    chrome.tabs.sendMessage(tab.id, {
-      action: 'toggleHighlight' 
+// Listen for messages from popup or content scripts
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'TOGGLE_HIGHLIGHTS') {
+    // Forward toggle message to active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0] && !tabs[0].url.startsWith('chrome://')) {
+        chrome.tabs.sendMessage(tabs[0].id, message);
+      }
     });
-  })
-  .catch((error) => {
-    console.error(`Script injection failed: ${error.message}`);
-  });
+  }
+});
+
+// Handle extension installation
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    console.log('Component Highlighter extension installed');
+  }
 });
