@@ -6,6 +6,12 @@
   window.componentHighlighterLoaded = true;
 
   const StorageManager = {
+    /**
+     * Saves a key-value pair to Chrome's local storage
+     * @param {string} key - The storage key
+     * @param {*} value - The value to store
+     * @returns {Promise<void>} Promise that resolves when storage is complete
+     */
     async saveToStorage(key, value) {
       return new Promise((resolve) => {
         chrome.storage.local.set({ [key]: value }, () => {
@@ -14,6 +20,11 @@
       });
     },
 
+    /**
+     * Retrieves a value from Chrome's local storage
+     * @param {string} key - The storage key to retrieve
+     * @returns {Promise<*>} Promise that resolves with the stored value or null
+     */
     async getFromStorage(key) {
       return new Promise((resolve) => {
         chrome.storage.local.get(key, (result) => {
@@ -22,6 +33,10 @@
       });
     },
 
+    /**
+     * Initializes extension settings by merging stored settings with defaults
+     * @returns {Promise<Object>} Promise that resolves with the merged settings object
+     */
     async initializeSettings() {
       const storedSettings = await this.getFromStorage(defaultSettings.storageKeyName);
 
@@ -45,6 +60,14 @@
   };
 
   const ComponentHighlighter = {
+  /**
+   * Creates a highlight tag element with tooltip for a component
+   * @param {Object} component - Component configuration object
+   * @param {string} component.name - Display name of the component
+   * @param {string} [component.contentTypeUrl] - URL to content type documentation
+   * @param {string} [component.uxDocsUrl] - URL to UX documentation/Storybook
+   * @returns {HTMLElement} The created highlight element with attached tooltip
+   */
   createHighlightElement(component) {
     const uniqueId = Math.random().toString(36).substring(4, 10);
     const highlightEl = document.createElement('div');
@@ -116,6 +139,11 @@
     return highlightEl;
   },
 
+  /**
+   * Positions a highlight element relative to its target component
+   * @param {HTMLElement} highlightEl - The highlight tag element to position
+   * @param {HTMLElement} targetEl - The target component element to highlight
+   */
   positionHighlight(highlightEl, targetEl) {
     const rect = targetEl.getBoundingClientRect();
     // Position the tag in the top right corner of the component
@@ -132,6 +160,11 @@
     }
   },
 
+  /**
+   * Creates and positions a highlight for a specific DOM element
+   * @param {HTMLElement} element - The DOM element to highlight
+   * @param {Object} component - Component configuration object
+   */
   highlightComponent(element, component) {
     // Check if element is already highlighted
     if (element.hasAttribute('data-component-highlighted')) {
@@ -151,6 +184,9 @@
     highlightEl._sourceElement = element;
   },
 
+  /**
+   * Removes all highlight elements and cleans up associated data
+   */
   removeHighlight() {
     const highlightElements = document.querySelectorAll(`[data-component-name]`);
     highlightElements.forEach(el => {
@@ -169,6 +205,12 @@
     });
   },
 
+  /**
+   * Toggles component highlights based on current settings
+   * @param {Object} settings - Extension settings object
+   * @param {boolean} settings.isHighlightEnabled - Whether highlighting is enabled
+   * @param {Array} settings.componentsConfig - Array of component configurations
+   */
   toggleHighlights(settings) {
     this.removeHighlight(); // Clear previous highlights
     if (!settings.isHighlightEnabled) {
@@ -192,6 +234,11 @@
     });
   },
 
+  /**
+   * Filters elements to prevent overlapping highlights by selecting representative elements
+   * @param {NodeList|Array} elements - Collection of DOM elements to filter
+   * @returns {Array} Array of representative elements with minimum distance between them
+   */
   getRepresentativeElements(elements) {
     if (elements.length === 0) return [];
     if (elements.length === 1) return [elements[0]];
@@ -247,6 +294,10 @@
     return representatives;
   },
 
+  /**
+   * Updates positions of existing highlights and handles new elements
+   * @param {Object} settings - Extension settings object
+   */
   updateHighlightPositions(settings) {
     if (!settings.isHighlightEnabled) {
         return;
@@ -270,6 +321,10 @@
     this.highlightNewElements(settings);
   },
   
+  /**
+   * Highlights newly added DOM elements that match component selectors
+   * @param {Object} settings - Extension settings object
+   */
   highlightNewElements(settings) {
     settings.componentsConfig.forEach(component => {
       const selector = component.identifiers.id
@@ -291,49 +346,70 @@
   }
 };
 
+  /**
+   * Main content script class that manages the extension lifecycle
+   */
   class ContentScript {
-  constructor() {
-    this.settings = null;
-    this.initialize();
-  }
+    /**
+     * Creates a new ContentScript instance and initializes it
+     */
+    constructor() {
+      this.settings = null;
+      this.initialize();
+    }
 
-  async initialize() {
-    try {
-      this.settings = await StorageManager.initializeSettings();
-      chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
-      window.addEventListener('scroll', () => this.handleScroll(), true); // Use capturing to get scroll events
-      window.addEventListener('resize', () => this.handleResize());
-      console.log('Content script initialized successfully');
-    } catch (error) {
-      console.error('Failed to initialize content script:', error);
+    /**
+     * Initializes the content script by loading settings and setting up event listeners
+     * @returns {Promise<void>}
+     */
+    async initialize() {
+      try {
+        this.settings = await StorageManager.initializeSettings();
+        chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
+        window.addEventListener('scroll', () => this.handleScroll(), true); // Use capturing to get scroll events
+        window.addEventListener('resize', () => this.handleResize());
+        console.log('Content script initialized successfully');
+      } catch (error) {
+        console.error('Failed to initialize content script:', error);
+      }
+    }
+
+    /**
+     * Handles messages from the background script
+     * @param {Object} message - Message object from background script
+     * @param {string} message.action - Action to perform
+     */
+    handleMessage(message) {
+      if (message.action === 'toggleHighlight') {
+        this.settings.isHighlightEnabled = !this.settings.isHighlightEnabled;
+        StorageManager.saveToStorage(this.settings.storageKeyName, this.settings)
+          .then(() => {
+            ComponentHighlighter.toggleHighlights(this.settings);
+          })
+          .catch((error) => {
+            console.error('Failed to save settings:', error);
+          });
+      }
+    }
+
+    /**
+     * Handles scroll events by updating highlight positions
+     */
+    handleScroll() {
+      if (this.settings && this.settings.isHighlightEnabled) {
+        ComponentHighlighter.updateHighlightPositions(this.settings);
+      }
+    }
+
+    /**
+     * Handles resize events by updating highlight positions
+     */
+    handleResize() {
+      if (this.settings && this.settings.isHighlightEnabled) {
+        ComponentHighlighter.updateHighlightPositions(this.settings);
+      }
     }
   }
-
-  handleMessage(message) {
-    if (message.action === 'toggleHighlight') {
-      this.settings.isHighlightEnabled = !this.settings.isHighlightEnabled;
-      StorageManager.saveToStorage(this.settings.storageKeyName, this.settings)
-        .then(() => {
-          ComponentHighlighter.toggleHighlights(this.settings);
-        })
-        .catch((error) => {
-          console.error('Failed to save settings:', error);
-        });
-    }
-  }
-
-  handleScroll() {
-    if (this.settings && this.settings.isHighlightEnabled) {
-      ComponentHighlighter.updateHighlightPositions(this.settings);
-    }
-  }
-
-  handleResize() {
-    if (this.settings && this.settings.isHighlightEnabled) {
-      ComponentHighlighter.updateHighlightPositions(this.settings);
-    }
-  }
-}
 
   new ContentScript();
 })();
