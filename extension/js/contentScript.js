@@ -133,14 +133,22 @@
   },
 
   highlightComponent(element, component) {
+    // Check if element is already highlighted
+    if (element.hasAttribute('data-component-highlighted')) {
+      return;
+    }
+    
     const highlightEl = this.createHighlightElement(component);
     // Append to DOM first so we can get dimensions
     document.body.appendChild(highlightEl);
     this.positionHighlight(highlightEl, element);
-
-    highlightEl.addEventListener('click', () => {
-      window.open(component.contentTypeUrl, '_blank');
-    });
+    
+    // Mark the source element as highlighted
+    element.setAttribute('data-component-highlighted', 'true');
+    element.setAttribute('data-highlight-id', highlightEl.getAttribute('data-component-name'));
+    
+    // Store reference to source element in highlight for cleanup
+    highlightEl._sourceElement = element;
   },
 
   removeHighlight() {
@@ -150,6 +158,13 @@
       if (el._tooltip) {
         el._tooltip.remove();
       }
+      
+      // Remove highlighting marker from source element
+      if (el._sourceElement) {
+        el._sourceElement.removeAttribute('data-component-highlighted');
+        el._sourceElement.removeAttribute('data-highlight-id');
+      }
+      
       el.remove();
     });
   },
@@ -165,18 +180,114 @@
         ? `#${component.identifiers.id}`
         : `.${component.identifiers.className}`;
 
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(el => {
+      // Only select elements that haven't been highlighted yet
+      const elements = document.querySelectorAll(`${selector}:not([data-component-highlighted])`);
+      
+      // Group elements by proximity to avoid overlapping highlights
+      const representativeElements = this.getRepresentativeElements(elements);
+      
+      representativeElements.forEach(el => {
         this.highlightComponent(el, component);
       });
     });
+  },
+
+  getRepresentativeElements(elements) {
+    if (elements.length === 0) return [];
+    if (elements.length === 1) return [elements[0]];
+    
+    const representatives = [];
+    const processed = new Set();
+    const minDistance = 20; // Minimum distance in pixels between highlights
+    
+    Array.from(elements).forEach(element => {
+      if (processed.has(element)) return;
+      
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Check if this element is too close to any existing representative
+      const tooClose = representatives.some(rep => {
+        const repRect = rep.getBoundingClientRect();
+        const repCenterX = repRect.left + repRect.width / 2;
+        const repCenterY = repRect.top + repRect.height / 2;
+        
+        const distance = Math.sqrt(
+          Math.pow(centerX - repCenterX, 2) + Math.pow(centerY - repCenterY, 2)
+        );
+        
+        return distance < minDistance;
+      });
+      
+      if (!tooClose) {
+        representatives.push(element);
+        
+        // Mark nearby elements as processed to avoid duplicates
+        Array.from(elements).forEach(otherElement => {
+          if (processed.has(otherElement)) return;
+          
+          const otherRect = otherElement.getBoundingClientRect();
+          const otherCenterX = otherRect.left + otherRect.width / 2;
+          const otherCenterY = otherRect.top + otherRect.height / 2;
+          
+          const distance = Math.sqrt(
+            Math.pow(centerX - otherCenterX, 2) + Math.pow(centerY - otherCenterY, 2)
+          );
+          
+          if (distance < minDistance) {
+            processed.add(otherElement);
+          }
+        });
+      }
+      
+      processed.add(element);
+    });
+    
+    return representatives;
   },
 
   updateHighlightPositions(settings) {
     if (!settings.isHighlightEnabled) {
         return;
     }
-    this.toggleHighlights(settings); // Re-run the highlight logic to reposition
+    
+    // Only reposition existing highlights, don't recreate them
+    const highlightElements = document.querySelectorAll(`[data-component-name]`);
+    highlightElements.forEach(highlightEl => {
+      if (highlightEl._sourceElement && document.contains(highlightEl._sourceElement)) {
+        this.positionHighlight(highlightEl, highlightEl._sourceElement);
+      } else {
+        // Source element no longer exists, remove the highlight
+        if (highlightEl._tooltip) {
+          highlightEl._tooltip.remove();
+        }
+        highlightEl.remove();
+      }
+    });
+    
+    // Check for new elements that need highlighting
+    this.highlightNewElements(settings);
+  },
+  
+  highlightNewElements(settings) {
+    settings.componentsConfig.forEach(component => {
+      const selector = component.identifiers.id
+        ? `#${component.identifiers.id}`
+        : `.${component.identifiers.className}`;
+
+      // Only select elements that haven't been highlighted yet
+      const elements = document.querySelectorAll(`${selector}:not([data-component-highlighted])`);
+      
+      if (elements.length > 0) {
+        // Group elements by proximity to avoid overlapping highlights
+        const representativeElements = this.getRepresentativeElements(elements);
+        
+        representativeElements.forEach(el => {
+          this.highlightComponent(el, component);
+        });
+      }
+    });
   }
 };
 
