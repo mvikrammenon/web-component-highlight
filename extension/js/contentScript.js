@@ -48,42 +48,19 @@
   createHighlightElement(component) {
     const uniqueId = Math.random().toString(36).substring(4, 10);
     const highlightEl = document.createElement('div');
-    highlightEl.style.position = 'absolute';
-    highlightEl.style.backgroundColor = '#007acc';
-    highlightEl.style.color = 'white';
-    highlightEl.style.padding = '4px 8px';
-    highlightEl.style.borderRadius = '4px';
-    highlightEl.style.fontSize = '12px';
-    highlightEl.style.fontFamily = 'Arial, sans-serif';
-    highlightEl.style.fontWeight = 'bold';
-    highlightEl.style.cursor = 'pointer';
-    highlightEl.style.zIndex = '10000';
-    highlightEl.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-    highlightEl.style.transition = 'all 0.2s ease';
+    highlightEl.className = 'component-highlight-tag';
     highlightEl.textContent = component.name;
     highlightEl.setAttribute('data-component-name', `${component.name}_${uniqueId}`);
     
     // Create custom tooltip
     const tooltip = document.createElement('div');
-    tooltip.style.position = 'absolute';
-    tooltip.style.backgroundColor = '#333';
-    tooltip.style.color = 'white';
-    tooltip.style.padding = '8px 12px';
-    tooltip.style.borderRadius = '6px';
-    tooltip.style.fontSize = '11px';
-    tooltip.style.fontFamily = 'Arial, sans-serif';
-    tooltip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
-    tooltip.style.zIndex = '10001';
-    tooltip.style.display = 'none';
-    tooltip.style.minWidth = '200px';
-    tooltip.style.maxWidth = '300px';
-    tooltip.style.lineHeight = '1.4';
+    tooltip.className = 'component-highlight-tooltip';
     
     // Create tooltip content with proper links
     tooltip.innerHTML = `
-      <div style="margin-bottom: 6px; font-weight: bold;">${component.name}</div>
-      ${component.contentTypeUrl ? `<div style="margin-bottom: 4px;"><strong>Content Type:</strong> <a href="${component.contentTypeUrl}" target="_blank" style="color: #4da6ff; text-decoration: none;">View Docs</a></div>` : ''}
-      ${component.uxDocsUrl ? `<div><strong>UX Docs:</strong> <a href="${component.uxDocsUrl}" target="_blank" style="color: #4da6ff; text-decoration: none;">View Storybook</a></div>` : ''}
+      <div class="component-highlight-tooltip-title">${component.name}</div>
+      ${component.contentTypeUrl ? `<div class="component-highlight-tooltip-item"><strong>Content Type:</strong> <a href="${component.contentTypeUrl}" target="_blank" class="component-highlight-tooltip-link">View Docs</a></div>` : ''}
+      ${component.uxDocsUrl ? `<div class="component-highlight-tooltip-item"><strong>UX Docs:</strong> <a href="${component.uxDocsUrl}" target="_blank" class="component-highlight-tooltip-link">View Storybook</a></div>` : ''}
     `;
     
     document.body.appendChild(tooltip);
@@ -93,8 +70,6 @@
      
      const showTooltip = () => {
        clearTimeout(hideTimeout);
-       highlightEl.style.backgroundColor = '#005a9e';
-       highlightEl.style.transform = 'scale(1.05)';
        
        // Position and show tooltip
        const rect = highlightEl.getBoundingClientRect();
@@ -116,8 +91,6 @@
      };
      
      const hideTooltip = () => {
-       highlightEl.style.backgroundColor = '#007acc';
-       highlightEl.style.transform = 'scale(1)';
        hideTimeout = setTimeout(() => {
          tooltip.style.display = 'none';
        }, 300); // 300ms delay before hiding

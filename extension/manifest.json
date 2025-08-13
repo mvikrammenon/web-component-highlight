@@ -11,6 +11,7 @@
     {
       "matches": ["*://*/*"],
       "js": ["js/defaultSettings.js", "js/contentScript.js"],
+      "css": ["styles.css"],
       "run_at": "document_end"
     }
   ],

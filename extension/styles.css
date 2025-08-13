@@ -3,3 +3,63 @@
 .extension-component-highlight-reset-style { 
   all: revert;
 }
+
+/* Component Highlight Tag Styles */
+.component-highlight-tag {
+  position: absolute;
+  background-color: #007acc;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.component-highlight-tag:hover {
+  background-color: #005a9e;
+  transform: scale(1.05);
+}
+
+/* Tooltip Styles */
+.component-highlight-tooltip {
+  position: absolute;
+  background-color: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  z-index: 10001;
+  display: none;
+  min-width: 200px;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.component-highlight-tooltip-title {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.component-highlight-tooltip-item {
+  margin-bottom: 4px;
+}
+
+.component-highlight-tooltip-item:last-child {
+  margin-bottom: 0;
+}
+
+.component-highlight-tooltip-link {
+  color: #4da6ff;
+  text-decoration: none;
+}
+
+.component-highlight-tooltip-link:hover {
+  text-decoration: underline;
+}
