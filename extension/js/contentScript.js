@@ -272,9 +272,16 @@
      }
 
      settings.componentsConfig.forEach(component => {
-       const selector = component.identifiers.id
-         ? `#${component.identifiers.id}`
-         : `.${component.identifiers.className}`;
+       let selector;
+       if (component.identifiers.id) {
+         selector = `#${component.identifiers.id}`;
+       } else if (component.identifiers.classNames) {
+         // Support multiple class names
+         selector = component.identifiers.classNames.map(className => `.${className}`).join(', ');
+       } else {
+         // Backward compatibility with single className
+         selector = `.${component.identifiers.className}`;
+       }
 
        // Only select elements that haven't been highlighted yet
        const elements = document.querySelectorAll(`${selector}:not([data-component-highlighted])`);

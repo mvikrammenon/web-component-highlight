@@ -12,7 +12,7 @@ const defaultSettings = {
     componentsConfig: [
         {
             name: 'Banner Box',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/FooterComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesBanner/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/banner--box-dark-blue',
             identifiers: {
                 className: 'de-banner--box'
@@ -20,7 +20,7 @@ const defaultSettings = {
         },
         {
             name: 'Banner Mini',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/FooterComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesBanner/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/banner--mini-gray',
             identifiers: {
                 className: 'de-banner--mini'
@@ -37,7 +37,7 @@ const defaultSettings = {
         },
         {
             name: 'Explore Container',
-            contentTypeUrl: '',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesExploreContainer/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/explorecontainer--default',
             identifiers: {
                 className: 'sitesExploreContainer'
@@ -45,15 +45,23 @@ const defaultSettings = {
         },
         {
             name: 'Explore Card Solid Color',
-            contentTypeUrl: '',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/exploreCardSolidColor/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/explorecontainer--stacked',
             identifiers: {
                 className: 'explore-card-solid-color'
             },
         },
         {
+            name: 'Explore Card Background Image',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/exploreCardBackgroundImage/fields',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/explorecontainer--stacked',
+            identifiers: {
+                className: 'explore-card-background-image'
+            },
+        },
+        {
             name: 'Solutions Cards Carousel',
-            contentTypeUrl: '',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesSolutionsCardsCarousel/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/solutionscardscarousel--default',
             identifiers: {
                 className: 'sitesSolutionsCardsCarousel',
@@ -61,23 +69,39 @@ const defaultSettings = {
         },
         {
             name: 'Sites News Carousel',
-            contentTypeUrl: '',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesNewsCarousel/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/sitesnewscarousel--default',
             identifiers: {
                 className: 'sitesNewsCarousel',
             },
         },
         {
+            name: 'News Carousel Card',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesNewsCarousel/fields',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/sitesnewscarousel--default',
+            identifiers: {
+                className: 'de-news-carousel-card'
+            },
+        },
+        {
             name: 'Hero',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesHero/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/hero--default',
             identifiers: {
                 className: 'heroComponent'
             },
         },
         {
+            name: 'Section Heading',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesSectionHeading/fields',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/mock-up--section-heading',
+            identifiers: {
+                className: 'section-heading'
+            },
+        },
+        {
             name: 'Cards Container',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesCardsContainer/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/cards-container--default',
             identifiers: {
                 className: 'sitesCardsContainer'
@@ -85,47 +109,63 @@ const defaultSettings = {
         },
         {
             name: 'Cards',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesCards/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/cards-container--default',
             identifiers: {
-                className: 'siemens-cards'
+                classNames: ['siemens-cards', 'card-image-left']
+            },
+        },
+        {
+            name: '3 Col Tiles Container',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesThreeColTiles/fields',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/threecoltiles--default',
+            identifiers: {
+                className: 'three-column-tile'
             },
         },
         {
             name: '3 Col Tiles',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
-            uxDocsUrl: 'https://zeroheight.com/',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesThreeColTiles/fields',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/threecoltiles--default',
             identifiers: {
-                className: 'sitesThreeColTiles'
+                className: 'tileHeightAdjust'
             },
         },
         {
-            name: 'Promo',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            name: 'Promo Container',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesPromo/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/promo--default',
             identifiers: {
-                className: 'promo-section'
+                className: 'de-promo-container'
             },
         },
         {
-            name: 'Sites Image List',
-            contentTypeUrl: '',
+            name: 'Promo Item',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesSinglePromoItem/fields',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/promo--default',
+            identifiers: {
+                className: 'de-promo-item'
+            },
+        },
+        {
+            name: 'Image List',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesImageList/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/imagelist--default',
             identifiers: {
                 className: 'sitesImageList'
             },
         },
         {
-            name: 'Sites Article Container',
-            contentTypeUrl: '',
+            name: 'Article Container',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesArticleContainer/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/articlecontainer--default-one-column-white',
             identifiers: {
-                className: 'sitesArticleContainer'
+                className: ['sitesArticleContainer', 'columnArticleClass']
             },
         },
         {
             name: 'Solutions Carousel Card',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesSolutionsCarouselCard/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/solutionscardscarousel--default',
             identifiers: {
                 className: 'de-solutions-carousel-card'
@@ -133,7 +173,7 @@ const defaultSettings = {
         },
         {
             name: 'Featured Cards Carousel',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesFeaturedCardsCarousel/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/featuredcardscarousel--featured-cards-default',
             identifiers: {
                 className: 'featured-cards-carousel'
@@ -141,7 +181,7 @@ const defaultSettings = {
         },
         {
             name: 'Featured Card',
-            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesFeaturedCard/fields',
             uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/featuredcardscarousel--featured-cards-default',
             identifiers: {
                 className: 'featured-card'
