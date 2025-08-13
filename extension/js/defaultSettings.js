@@ -3,19 +3,25 @@ const defaultSettings = {
     isHighlightEnabled: false,
     storageKeyName: 'component-highlight-settings',
     elHighlightName: 'data-component-highlight',
+    // Domain configuration - will be set during first-time setup
+    domains: {
+        contentfulDomain: '', // Will be configured by user
+        storybookDomain: '', // Will be configured by user
+        setupCompleted: false
+    },
     componentsConfig: [
         {
             name: 'Banner Box',
-            contentTypeUrl: 'https://docs.example.com/FooterComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/banner--box-dark-blue',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/FooterComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/banner--box-dark-blue',
             identifiers: {
                 className: 'de-banner--box'
             },
         },
         {
             name: 'Banner Mini',
-            contentTypeUrl: 'https://docs.example.com/FooterComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/banner--mini-gray',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/FooterComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/banner--mini-gray',
             identifiers: {
                 className: 'de-banner--mini'
             },
@@ -23,8 +29,8 @@ const defaultSettings = {
         },
         {
             name: 'Bento Layout',
-            contentTypeUrl: 'https://docs.example.com/FooterComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/tabcontainer--bento-layout-light',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/environments/dev/content_types/sitesBentoLayout/fields',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/tabcontainer--bento-layout-light',
             identifiers: {
                 className: 'bento-layout'
             },
@@ -32,7 +38,7 @@ const defaultSettings = {
         {
             name: 'Explore Container',
             contentTypeUrl: '',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/explorecontainer--default',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/explorecontainer--default',
             identifiers: {
                 className: 'sitesExploreContainer'
             },
@@ -40,7 +46,7 @@ const defaultSettings = {
         {
             name: 'Explore Card Solid Color',
             contentTypeUrl: '',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/explorecontainer--stacked',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/explorecontainer--stacked',
             identifiers: {
                 className: 'explore-card-solid-color'
             },
@@ -48,7 +54,7 @@ const defaultSettings = {
         {
             name: 'Solutions Cards Carousel',
             contentTypeUrl: '',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/solutionscardscarousel--default',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/solutionscardscarousel--default',
             identifiers: {
                 className: 'sitesSolutionsCardsCarousel',
             },
@@ -56,38 +62,38 @@ const defaultSettings = {
         {
             name: 'Sites News Carousel',
             contentTypeUrl: '',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/sitesnewscarousel--default',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/sitesnewscarousel--default',
             identifiers: {
                 className: 'sitesNewsCarousel',
             },
         },
         {
             name: 'Hero',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/hero--default',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/hero--default',
             identifiers: {
                 className: 'heroComponent'
             },
         },
         {
             name: 'Cards Container',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/cards-container--default',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/cards-container--default',
             identifiers: {
                 className: 'sitesCardsContainer'
             },
         },
         {
             name: 'Cards',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/cards-container--default',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/cards-container--default',
             identifiers: {
                 className: 'siemens-cards'
             },
         },
         {
             name: '3 Col Tiles',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
             uxDocsUrl: 'https://zeroheight.com/',
             identifiers: {
                 className: 'sitesThreeColTiles'
@@ -95,8 +101,8 @@ const defaultSettings = {
         },
         {
             name: 'Promo',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/promo--default',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/promo--default',
             identifiers: {
                 className: 'promo-section'
             },
@@ -104,40 +110,39 @@ const defaultSettings = {
         {
             name: 'Sites Image List',
             contentTypeUrl: '',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/imagelist--default',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/imagelist--default',
             identifiers: {
                 className: 'sitesImageList'
             },
-            
         },
         {
             name: 'Sites Article Container',
             contentTypeUrl: '',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/articlecontainer--default-one-column-white',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/articlecontainer--default-one-column-white',
             identifiers: {
                 className: 'sitesArticleContainer'
             },
         },
         {
             name: 'Solutions Carousel Card',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/solutionscardscarousel--default',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/solutionscardscarousel--default',
             identifiers: {
                 className: 'de-solutions-carousel-card'
             },
         },
         {
             name: 'Featured Cards Carousel',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/featuredcardscarousel--featured-cards-default',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/featuredcardscarousel--featured-cards-default',
             identifiers: {
                 className: 'featured-cards-carousel'
             },
         },
         {
             name: 'Featured Card',
-            contentTypeUrl: 'https://docs.example.com/HeroComponent',
-            uxDocsUrl: 'https://sharelib-storybook-dev.stage.sw.siemens.com/?path=/story/featuredcardscarousel--featured-cards-default',
+            contentTypeUrl: '{CONTENTFUL_DOMAIN}/docs/HeroComponent',
+            uxDocsUrl: '{STORYBOOK_DOMAIN}/?path=/story/featuredcardscarousel--featured-cards-default',
             identifiers: {
                 className: 'featured-card'
             },

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Highlighter Setup</title>
+    <style>
+        body {
+            width: 400px;
+            min-height: 300px;
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            margin: 0 0 8px 0;
+            color: #1a73e8;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 13px;
+            color: #5f6368;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #3c4043;
+            margin-bottom: 6px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 13px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 1px #1a73e8;
+        }
+        
+        .form-group .help-text {
+            font-size: 11px;
+            color: #5f6368;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+        
+        .error {
+            color: #d93025;
+            font-size: 11px;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 24px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-primary {
+            background: #1a73e8;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1557b0;
+        }
+        
+        .btn-primary:disabled {
+            background: #dadce0;
+            color: #5f6368;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #e8f5e8;
+            color: #137333;
+            border: 1px solid #ceead6;
+        }
+        
+        .status.error {
+            background: #fce8e6;
+            color: #d93025;
+            border: 1px solid #f9dedc;
+        }
+        
+        .existing-setup {
+            background: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .existing-setup h3 {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            color: #3c4043;
+        }
+        
+        .existing-setup .domain-info {
+            font-size: 12px;
+            color: #5f6368;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        
+        .existing-setup .domain-info strong {
+            color: #3c4043;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <h1 style="margin: 0; display: flex; align-items: center; gap: 8px;"><img src="icon128.png" alt="Component Highlighter" style="width: 24px; height: 24px;">Component Highlighter</h1>
+            <button type="button" class="btn btn-primary" id="toggleBtn" style="max-width: 70px;">Show</button>
+        </div>
+        <p style="margin: 0 0 20px 0;">Configure your Contentful and Storybook domains</p>
+    </div>
+    
+    <form id="setupForm">
+        <div class="form-group">
+            <label for="contentfulDomain">Contentful Domain</label>
+            <input type="url" id="contentfulDomain" placeholder="https://app.contentful.com/spaces/ID" required>
+            <div class="help-text">Your contentful space URL - dev env by default</div>
+            <div class="error" id="contentfulError"></div>
+        </div>
+        
+        <div class="form-group">
+            <label for="storybookDomain">Storybook Domain</label>
+            <input type="url" id="storybookDomain" placeholder="https://your-storybook.netlify.app" required>
+            <div class="help-text">Your Storybook deployment URL</div>
+            <div class="error" id="storybookError"></div>
+        </div>
+        
+        <div class="buttons">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+        </div>
+    </form>
+
+    <div id="status" class="status"></div>
+    
+    <script src="js/popup.js"></script>
+</body>
+</html>
