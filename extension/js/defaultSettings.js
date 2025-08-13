@@ -11,7 +11,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'de-banner--box'
             },
-            borderHighlightStyle: '1px dotted red'
         },
         {
             name: 'Banner Mini',
@@ -20,7 +19,7 @@ const defaultSettings = {
             identifiers: {
                 className: 'de-banner--mini'
             },
-            borderHighlightStyle: '1px dotted red'
+
         },
         {
             name: 'Bento Layout',
@@ -29,7 +28,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'bento-layout'
             },
-            borderHighlightStyle: '1px dotted red'
         },
         {
             name: 'Explore Container',
@@ -38,7 +36,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'sitesExploreContainer'
             },
-            borderHighlightStyle: '1px dotted red'
         },
         {
             name: 'Explore Card Solid Color',
@@ -47,7 +44,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'explore-card-solid-color'
             },
-            borderHighlightStyle: '1px dotted red'
         },
         {
             name: 'Solutions Cards Carousel',
@@ -56,7 +52,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'sitesSolutionsCardsCarousel',
             },
-            borderHighlightStyle: '1px dotted red'
         },
         {
             name: 'Sites News Carousel',
@@ -65,7 +60,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'sitesNewsCarousel',
             },
-            borderHighlightStyle: '1px dotted red'
         },
         {
             name: 'Hero',
@@ -74,7 +68,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'heroComponent'
             },
-            borderHighlightStyle: '1px solid red'
         },
         {
             name: 'Cards Container',
@@ -83,7 +76,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'sitesCardsContainer'
             },
-            borderHighlightStyle: '1px dotted green'
         },
         {
             name: 'Cards',
@@ -92,7 +84,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'siemens-cards'
             },
-            borderHighlightStyle: '1px dotted blue'
         },
         {
             name: '3 Col Tiles',
@@ -101,7 +92,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'sitesThreeColTiles'
             },
-            borderHighlightStyle: '1px dotted blue'
         },
         {
             name: 'Promo',
@@ -110,7 +100,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'promo-section'
             },
-            borderHighlightStyle: '1px dotted blue'
         },
         {
             name: 'Sites Image List',
@@ -119,7 +108,7 @@ const defaultSettings = {
             identifiers: {
                 className: 'sitesImageList'
             },
-            borderHighlightStyle: '1px dotted blue'
+            
         },
         {
             name: 'Sites Article Container',
@@ -128,7 +117,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'sitesArticleContainer'
             },
-            borderHighlightStyle: '1px dotted blue'
         },
         {
             name: 'Solutions Carousel Card',
@@ -137,7 +125,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'de-solutions-carousel-card'
             },
-            borderHighlightStyle: '1px dotted blue'
         },
         {
             name: 'Featured Cards Carousel',
@@ -146,7 +133,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'featured-cards-carousel'
             },
-            borderHighlightStyle: '1px dotted blue'
         },
         {
             name: 'Featured Card',
@@ -155,7 +141,6 @@ const defaultSettings = {
             identifiers: {
                 className: 'featured-card'
             },
-            borderHighlightStyle: '1px dotted blue'
         }
     ]
 };

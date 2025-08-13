@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "UI Viz Component Highlighter",
+  "name": "UI Component Highlighter",
   "version": "2.0",
-  "description": "Highlights UI components and adds links based on JSON mapping.",
+  "description": "Highlights UI components and adds links based on JSON config file",
   "permissions": ["activeTab", "scripting", "storage"],
   "background": {
     "service_worker": "js/background.js"
@@ -11,6 +11,7 @@
     {
       "matches": ["*://*/*"],
       "js": ["js/defaultSettings.js", "js/contentScript.js"],
+      "css": ["styles.css"],
       "run_at": "document_end"
     }
   ],
